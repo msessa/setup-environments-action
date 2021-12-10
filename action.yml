@@ -1,0 +1,28 @@
+name: 'Setup Environments'
+description: 'Action to configures environments in a repository'
+author: 'sv-oss'
+inputs:
+  token:
+    required: true
+    description: "Github token with the scope 'repo'"
+  repository:
+    required: false
+    description: 'Repository name with owner. For example, sv-oss/repo'
+    default: ${{ github.repository }}
+  environments:
+    description: "Comma-separated list of Environments to configure"
+    required: true
+  reviewers:
+    required: false
+    description: "Comma-separated list of required reviewers e.g. 'org/team,user' max 6"
+  # wait_time:
+  #   required: false
+  #   description: "Wait time in minutes"
+  #   default: "0"
+  # protected_branches_only:
+  #   required: false
+  #   description: "Only protected branches can be deployed"
+  #   default: "false"
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

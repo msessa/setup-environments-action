@@ -51,7 +51,8 @@ function run() {
             const repositoryName = splitRepository[1];
             const environments = core.getInput('environments', { required: true }).split(',');
             core.debug(`environments = '${environments}'`);
-            const reviewers = core.getInput('reviewers').split(',');
+            const reviewersStringList = core.getInput('reviewers');
+            const reviewers = reviewersStringList !== '' ? reviewersStringList.split(',') : [];
             core.debug(`reviewers = '${reviewers}'`);
             const envReviewers = yield getEnvReviewers(token, reviewers);
             yield adjustRepoAccessForReviewers(token, repositoryOwner, repositoryName, envReviewers);
@@ -72,11 +73,11 @@ function updateEnvironments(token, repositoryOwner, repositoryName, environments
                     owner: repositoryOwner,
                     repo: repositoryName,
                     environment_name: env,
-                    reviewers: reviewers.length > 0 ? reviewers : undefined
+                    reviewers
                 });
             }
             catch (error) {
-                throw new Error(`cannot setup environemnt "${env}": ${error}`);
+                throw new Error(`cannot setup environment "${env}": ${error}`);
             }
         }
         return Promise.resolve();

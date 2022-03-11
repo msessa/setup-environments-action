@@ -11,17 +11,20 @@ async function run(): Promise<void> {
     if (splitRepository.length !== 2 || !splitRepository[0] || !splitRepository[1]) {
       throw new Error(`Invalid repository '${qualifiedRepository}'. Expected format {owner}/{repo}.`)
     }
+
     const repositoryOwner = splitRepository[0]
     const repositoryName = splitRepository[1]
 
     const environments = core.getInput('environments', {required: true}).split(',')
     core.debug(`environments = '${environments}'`)
 
-    const reviewers = core.getInput('reviewers').split(',')
+    const reviewersStringList = core.getInput('reviewers')
+
+    const reviewers: string[] = reviewersStringList !== '' ? reviewersStringList.split(',') : []
+
     core.debug(`reviewers = '${reviewers}'`)
 
     const envReviewers = await getEnvReviewers(token, reviewers)
-
     await adjustRepoAccessForReviewers(token, repositoryOwner, repositoryName, envReviewers)
 
     await updateEnvironments(token, repositoryOwner, repositoryName, environments, envReviewers)
@@ -44,10 +47,10 @@ async function updateEnvironments(
         owner: repositoryOwner,
         repo: repositoryName,
         environment_name: env,
-        reviewers: reviewers.length > 0 ? reviewers : undefined
+        reviewers
       })
     } catch (error) {
-      throw new Error(`cannot setup environemnt "${env}": ${error}`)
+      throw new Error(`cannot setup environment "${env}": ${error}`)
     }
   }
   return Promise.resolve()

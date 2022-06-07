@@ -113,8 +113,10 @@ async function getEnvReviewers(token: string, reviewers: string[]): Promise<EnvR
   for (const rvwr of reviewers) {
     if (rvwr.includes('/')) {
       // Reviewer is a Team of an organization
-      const org = rvwr.split('/')[0]
-      const team_slug = rvwr.split('/')[1]
+      // Strip leading @ (if exists)
+      const normalized_rvwr = rvwr.startsWith('@') ? rvwr.slice(1) : rvwr;
+      const org = normalized_rvwr.split('/')[0]
+      const team_slug = normalized_rvwr.split('/')[1]
 
       try {
         const team = await octo.rest.teams.getByName({

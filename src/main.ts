@@ -73,15 +73,21 @@ async function adjustRepoAccessForReviewers(
           org: envr.teamOrg!,
           team_slug: envr.name
         })
-      } catch (error) {
-        core.info(`granting team ${envr.name} read permissions over the repository`)
-        await octo.rest.teams.addOrUpdateRepoPermissionsInOrg({
-          owner: repositoryOwner,
-          repo: repositoryName,
-          org: envr.teamOrg!,
-          team_slug: envr.name,
-          permission: 'pull'
-        })
+      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const error = e as any
+        if (error.status && error.status === 404) {
+          core.info(`granting team ${envr.name} read permissions over the repository`)
+          await octo.rest.teams.addOrUpdateRepoPermissionsInOrg({
+            owner: repositoryOwner,
+            repo: repositoryName,
+            org: envr.teamOrg!,
+            team_slug: envr.name,
+            permission: 'pull'
+          })
+        } else {
+          throw error
+        }
       }
     } else {
       try {
@@ -114,7 +120,7 @@ async function getEnvReviewers(token: string, reviewers: string[]): Promise<EnvR
     if (rvwr.includes('/')) {
       // Reviewer is a Team of an organization
       // Strip leading @ (if exists)
-      const normalized_rvwr = rvwr.startsWith('@') ? rvwr.slice(1) : rvwr;
+      const normalized_rvwr = rvwr.startsWith('@') ? rvwr.slice(1) : rvwr
       const org = normalized_rvwr.split('/')[0]
       const team_slug = normalized_rvwr.split('/')[1]
 

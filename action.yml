@@ -15,14 +15,6 @@ inputs:
   reviewers:
     required: false
     description: "Comma-separated list of required reviewers e.g. 'org/team,user' max 6"
-  # wait_time:
-  #   required: false
-  #   description: "Wait time in minutes"
-  #   default: "0"
-  # protected_branches_only:
-  #   required: false
-  #   description: "Only protected branches can be deployed"
-  #   default: "false"
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

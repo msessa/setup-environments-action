@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
   try {
     const token = core.getInput('token', { required: true });
 
@@ -164,6 +164,3 @@ type EnvReviewer = {
   name: string;
   teamOrg?: string;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-run();

@@ -10,6 +10,7 @@ const project = new GitHubActionTypeScriptProject({
   name: 'setup-environments-action',
   packageManager: javascript.NodePackageManager.NPM,
   projenrcTs: true,
+  minNodeVersion: '20.12.1',
   depsUpgradeOptions: {
     workflow: false,
   },

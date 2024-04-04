@@ -13,6 +13,7 @@ const project = new GitHubActionTypeScriptProject({
   depsUpgradeOptions: {
     workflow: false,
   },
+  mutableBuild: false,
   minMajorVersion: 1,
   license: 'MIT',
   copyrightOwner: 'Service Victoria',

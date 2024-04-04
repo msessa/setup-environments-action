@@ -2,6 +2,7 @@ import { github, javascript } from 'projen';
 import { GitHubActionTypeScriptProject, RunsUsing } from 'projen-github-action-typescript';
 
 const project = new GitHubActionTypeScriptProject({
+
   defaultReleaseBranch: 'main',
   devDeps: [
     'projen-github-action-typescript',
@@ -11,8 +12,19 @@ const project = new GitHubActionTypeScriptProject({
   projenrcTs: true,
   minNodeVersion: '20.12.1',
   depsUpgradeOptions: {
-    workflow: false,
+    workflowOptions: {
+      projenCredentials: github.GithubCredentials.fromApp({
+        appIdSecret: 'CICD_APP_ID',
+        privateKeySecret: 'CICD_APP_PRIVKEY',
+      }),
+      labels: ['deps-upgrade'],
+    },
   },
+  autoApproveOptions: {
+    label: 'deps-upgrade',
+    allowedUsernames: [],
+  },
+  dependabot: false,
   mutableBuild: false,
   minMajorVersion: 1,
   license: 'MIT',

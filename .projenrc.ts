@@ -5,7 +5,6 @@ const project = new GitHubActionTypeScriptProject({
   defaultReleaseBranch: 'main',
   devDeps: [
     'projen-github-action-typescript',
-    'esbuild',
   ],
   name: 'setup-environments-action',
   packageManager: javascript.NodePackageManager.NPM,

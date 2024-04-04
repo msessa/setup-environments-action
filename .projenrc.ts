@@ -59,6 +59,9 @@ const project = new GitHubActionTypeScriptProject({
   },
 });
 
+// Build the project after upgrading so that the compiled JS ends up being committed
+project.tasks.tryFind('post-upgrade')?.spawn(project.buildTask);
+
 project.release?.addJobs({
   'floating-tags': {
     permissions: {
